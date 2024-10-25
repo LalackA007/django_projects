@@ -2,9 +2,17 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 def hello(request, name):
-    # return HttpResponse("Name: {}".format(name))
-    ctxt = {'name': name}
-    return render(request, 'hello_app/hello.html', ctxt)
+    return HttpResponse(f"Hello, {name}!")
+
+def home(request):
+    return render(request, 'hello_app/base.html')
+
+def catalog(request):
+    return render(request, 'hello_app/catalog.html')
+
+def about(request):
+    return render(request, 'hello_app/about.html')
+
 
 def calc(request, a, b):
     return HttpResponse("{}+{}={}".format(a, b, a+b))

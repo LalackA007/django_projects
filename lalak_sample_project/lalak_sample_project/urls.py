@@ -5,5 +5,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # path("polls/", include("polls.urls")),
     path("", include("hello_app.urls")),
+    path('catalog/', include('zvit.catalog.urls')),
     path("", include("home_app.urls"))
 ]
