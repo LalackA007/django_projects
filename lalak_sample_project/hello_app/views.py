@@ -1,7 +1,10 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 
 def hello(request, name):
-    return HttpResponse("Name: {}".format(name))
+    # return HttpResponse("Name: {}".format(name))
+    ctxt = {'name': name}
+    return render(request, 'hello_app/hello.html', ctxt)
 
 def calc(request, a, b):
     return HttpResponse("{}+{}={}".format(a, b, a+b))
