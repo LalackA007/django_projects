@@ -109,12 +109,7 @@
                 <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
                 <p>Ціна: ${{ product.price }}</p>
-                
-                <!-- Add to Cart Form -->
-                <form action="{% url 'add_to_cart' product.id %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit">В кошик</button>
-                </form>
+                <button type="submit">В кошик</button>
             </div>
         {% endfor %}
     </section>
