@@ -109,7 +109,9 @@
                 <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
                 <p>Ціна: ${{ product.price }}</p>
-                <button type="submit">В кошик</button>
+                <a href="{% url 'add_product_to_cart' product.id %}">
+                    <button type="button">В кошик</button>
+                </a>
             </div>
         {% endfor %}
     </section>

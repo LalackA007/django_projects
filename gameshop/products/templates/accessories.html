@@ -108,10 +108,13 @@
                 <h2>{{ accessory.name }}</h2>
                 <p>{{ accessory.description }}</p>
                 <p>Ціна: ${{ accessory.price }}</p>
-                <button>В кошик</button>
+                <a href="{% url 'add_accessory_to_cart' accessory.id %}">
+                    <button type="button">В кошик</button>
+                </a>                
             </div>
         {% endfor %}
     </section>
+    
 
 </body>
 </html>
