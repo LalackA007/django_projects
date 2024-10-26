@@ -220,18 +220,37 @@
     </div>
 
     <div class="container">
-        <h2>Your Shopping Cart</h2>
-
-        <div class="cart-item">
-            
-        </div>
-
+        <h2>Ваш кошик</h2>
+    
+        {% if cart %}
+        {% for item_id, item in cart.items %}
+            <div class="cart-item">
+                <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                <div class="cart-item-details">
+                    <h4>{{ item.name }}</h4>
+                    <p>Ціна: ${{ item.price }}</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <label>Кількість:</label>
+                    <input type="number" value="{{ item.quantity }}" min="1" readonly>
+                </div>
+                <div class="cart-item-price">
+                    <p>{{ item.price|floatformat:2 }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    
         <div class="cart-summary">
-
+            <h3>Загальна сума: ${{ total_price }}</h3>
         </div>
-
+    
         <button class="checkout-btn" id="checkoutBtn">Оформити замовлення</button>
+        {% else %}
+            <p>Ваш кошик порожній.</p>
+        {% endif %}
     </div>
+    
+    
 
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
