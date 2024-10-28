@@ -37,7 +37,7 @@
         }
 
         nav a:hover {
-            color: #007bff;
+            color: #218838;
         }
 
         .cart a {
@@ -113,6 +113,7 @@
             <ul>
                 <li><a href="{% url 'home' %}">Настільні ігри</a></li>
                 <li><a href="{% url 'accessories' %}">Аксесуари</a></li>
+                <li><a href="{% url 'register' %}">Реєстрація</a></li>
                 <li class="cart"><a href="{% url 'cart' %}">🛒</a></li>
             </ul>
         </nav>
@@ -145,7 +146,6 @@
             </div>
         {% endfor %}
     </section>
-
 
 </body>
 </html>

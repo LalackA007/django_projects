@@ -10,12 +10,10 @@ def register(request):
         password = request.POST.get('password')
         email = request.POST.get('email')
 
-        # Перевірка, чи існує користувач із таким ім'ям або email
         if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
             messages.error(request, "Користувач з таким ім'ям або електронною поштою вже існує.")
             return redirect('register')
         
-        # Створення нового користувача
         user = User.objects.create(username=username, password=password, email=email)
         request.session['user_id'] = user.id
         messages.success(request, "Реєстрація пройшла успішно!")
@@ -28,10 +26,9 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        # Пошук користувача за ім'ям та паролем
         try:
             user = User.objects.get(username=username, password=password)
-            request.session['user_id'] = user.id  # Збереження ID користувача в сесії
+            request.session['user_id'] = user.id
             messages.success(request, "Авторизація пройшла успішно!")
             return redirect('home')
         except User.DoesNotExist:
@@ -41,7 +38,7 @@ def login(request):
     return render(request, 'login.html')
 
 def logout(request):
-    request.session.flush()  # Видалення всіх даних із сесії
+    request.session.flush()
     messages.success(request, "Вихід успішний!")
     return redirect('home')
 
@@ -54,7 +51,7 @@ def accessories(request):
     return render(request, 'accessories.html', {'accessories': accessories})
 
 def cart(request):
-    if 'user_id' not in request.session:  # Перевірка авторизації користувача
+    if 'user_id' not in request.session:
         messages.error(request, "Будь ласка, зареєструйтеся або авторизуйтеся для оформлення замовлення.")
         return redirect('register')
 
@@ -62,7 +59,6 @@ def cart(request):
     total_price = round(sum(float(item['price']) * item['quantity'] for item in cart.values()), 2)
 
     if request.method == "POST":
-        # Обробка замовлення
         name = request.POST.get("name")
         address = request.POST.get("address")
         phone = request.POST.get("phone")
@@ -105,7 +101,6 @@ def add_product_to_cart(request, product_id):
 
     messages.success(request, f"Товар '{item.name}' додано до кошика!")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
 
 def add_accessory_to_cart(request, accessory_id):
     item = Accessories.objects.filter(id=accessory_id).first()
