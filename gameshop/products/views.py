@@ -1,72 +1,49 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        try:
-            user = User.objects.get(username=username)
-            if user.password == password:
-                request.session['user_id'] = user.id
-                messages.success(request, 'Ви успішно увійшли!')
-                return redirect('home')
-            else:
-                messages.error(request, 'Невірний пароль.')
-        except User.DoesNotExist:
-            messages.error(request, 'Користувача не знайдено.')
-
-    return render(request, 'registration/login.html')
-
-def signup_view(request):
+def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         email = request.POST.get('email')
 
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Користувач з таким ім\'ям вже існує.')
-        elif User.objects.filter(email=email).exists():
-            messages.error(request, 'Цей email вже зареєстровано.')
-        else:
-            User.objects.create(username=username, password=password, email=email)
-            messages.success(request, 'Реєстрація успішна! Тепер ви можете увійти.')
+        # Перевірка, чи існує користувач із таким ім'ям або email
+        if User.objects.filter(username=username).exists() or User.objects.filter(email=email).exists():
+            messages.error(request, "Користувач з таким ім'ям або електронною поштою вже існує.")
+            return redirect('register')
+        
+        # Створення нового користувача
+        user = User.objects.create(username=username, password=password, email=email)
+        request.session['user_id'] = user.id
+        messages.success(request, "Реєстрація пройшла успішно!")
+        return redirect('home')
+
+    return render(request, 'register.html')
+
+def login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Пошук користувача за ім'ям та паролем
+        try:
+            user = User.objects.get(username=username, password=password)
+            request.session['user_id'] = user.id  # Збереження ID користувача в сесії
+            messages.success(request, "Авторизація пройшла успішно!")
+            return redirect('home')
+        except User.DoesNotExist:
+            messages.error(request, "Неправильне ім'я користувача або пароль.")
             return redirect('login')
 
-    return render(request, 'registration/signup.html')
+    return render(request, 'login.html')
 
-def checkout(request):
-    if 'user_id' not in request.session:
-        messages.error(request, 'Вам потрібно увійти, щоб оформити замовлення.')
-        return redirect('login')
-
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        address = request.POST.get('address')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
-        payment = request.POST.get('payment')
-
-        if all([name, address, phone, email, payment]):
-            request.session['cart'] = {}
-            request.session.modified = True
-            messages.success(request, 'Ваше замовлення успішно оформлено!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Будь ласка, заповніть усі поля форми.')
-
-    return render(request, 'checkout.html')
-
-def logout_view(request):
-    if 'user_id' in request.session:
-        del request.session['user_id']
-        messages.success(request, 'Ви успішно вийшли.')
+def logout(request):
+    request.session.flush()  # Видалення всіх даних із сесії
+    messages.success(request, "Вихід успішний!")
     return redirect('home')
-
 
 def home(request):
     products = Product.objects.all()
@@ -77,10 +54,15 @@ def accessories(request):
     return render(request, 'accessories.html', {'accessories': accessories})
 
 def cart(request):
+    if 'user_id' not in request.session:  # Перевірка авторизації користувача
+        messages.error(request, "Будь ласка, зареєструйтеся або авторизуйтеся для оформлення замовлення.")
+        return redirect('register')
+
     cart = request.session.get('cart', {})
     total_price = round(sum(float(item['price']) * item['quantity'] for item in cart.values()), 2)
 
     if request.method == "POST":
+        # Обробка замовлення
         name = request.POST.get("name")
         address = request.POST.get("address")
         phone = request.POST.get("phone")
