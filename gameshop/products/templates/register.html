@@ -61,11 +61,39 @@
         .switch-link:hover {
             text-decoration: underline;
         }
+
+        .alert {
+            padding: 10px;
+            margin: 10px 10px 20px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Реєстрація</h1>
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
         <form method="POST" action="{% url 'register' %}">
             {% csrf_token %}
             <label for="username">Ім'я користувача:</label>
