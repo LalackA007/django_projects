@@ -15,7 +15,6 @@ def accessories(request):
 def cart(request):
     cart = request.session.get('cart', {})
     total_price = round(sum(float(item['price']) * item['quantity'] for item in cart.values()), 2)
-    success_message = None
 
     if request.method == "POST":
         name = request.POST.get("name")
@@ -27,16 +26,18 @@ def cart(request):
         if all([name, address, phone, email, payment]):
             request.session['cart'] = {}
             request.session.modified = True
-            success_message = "Ваше замовлення було успішно оформлено!"
-            return HttpResponseRedirect(reverse('cart'))
+            messages.success(request, "Ваше замовлення було успішно оформлено!")
         else:
-            success_message = "Будь ласка, заповніть усі поля форми."
+            messages.error(request, "Будь ласка, заповніть усі поля форми.")
 
-    return render(request, 'cart.html', {'cart': cart, 'total_price': total_price, 'success_message': success_message})
+        return redirect('cart')
+
+    return render(request, 'cart.html', {'cart': cart, 'total_price': total_price})
 
 def add_product_to_cart(request, product_id):
     item = Product.objects.filter(id=product_id).first()
     if not item:
+        messages.error(request, "Цей товар не знайдено.")
         return redirect('home')
 
     cart = request.session.get('cart', {})
@@ -56,12 +57,14 @@ def add_product_to_cart(request, product_id):
     request.session['cart'] = cart
     request.session.modified = True
 
-    return redirect('cart')
+    messages.success(request, f"Товар '{item.name}' додано до кошика!")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def add_accessory_to_cart(request, accessory_id):
     item = Accessories.objects.filter(id=accessory_id).first()
     if not item:
+        messages.error(request, "Цей аксесуар не знайдено.")
         return redirect('home')
 
     cart = request.session.get('cart', {})
@@ -81,7 +84,8 @@ def add_accessory_to_cart(request, accessory_id):
     request.session['cart'] = cart
     request.session.modified = True
 
-    return redirect('cart')
+    messages.success(request, f"Аксесуар '{item.name}' додано до кошика!")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 def update_cart(request, item_id):
     cart = request.session.get('cart', {})
