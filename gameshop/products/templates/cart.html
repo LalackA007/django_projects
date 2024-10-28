@@ -249,34 +249,39 @@
     </div>    
 
         {% if cart %}
-        {% for item_id, item in cart.items %}
-            <div class="cart-item">
-                <img src="{{ item.image_url }}" alt="{{ item.name }}">
-                <div class="cart-item-details">
-                    <h4>{{ item.name }}</h4>
-                    <p>Ціна: ${{ item.price }}</p>
+            {% for item_id, item in cart.items %}
+                <div class="cart-item">
+                    <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                    <div class="cart-item-details">
+                        <h4>{{ item.name }}</h4>
+                        <p>Ціна: ${{ item.price }}</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <label>Кількість:</label>
+                        <input type="number" value="{{ item.quantity }}" min="1" readonly>
+                    </div>
+                    <div class="cart-item-price">
+                        <p>{{ item.price|floatformat:2 }}</p>
+                    </div>
                 </div>
-                <div class="cart-item-quantity">
-                    <label>Кількість:</label>
-                    <input type="number" value="{{ item.quantity }}" min="1" readonly>
-                </div>
-                <div class="cart-item-price">
-                    <p>{{ item.price|floatformat:2 }}</p>
-                </div>
+            {% endfor %}
+        
+            <div class="cart-summary">
+                <h3>Загальна сума: ${{ total_price }}</h3>
             </div>
-        {% endfor %}
-    
-        <div class="cart-summary">
-            <h3>Загальна сума: ${{ total_price }}</h3>
-        </div>
-    
-        <button class="checkout-btn" id="checkoutBtn">Оформити замовлення</button>
+        
+            {% if request.session.user_id %}
+                <!-- Користувач зареєстрований, дозволяємо оформлення замовлення -->
+                <button class="checkout-btn" id="checkoutBtn">Оформити замовлення</button>
+            {% else %}
+                <!-- Користувач не зареєстрований, додати повідомлення -->
+                <p>Будь ласка, <a href="{% url 'login' %}">увійдіть</a> або <a href="{% url 'register' %}">зареєструйтеся</a> для оформлення замовлення.</p>
+            {% endif %}
+            
         {% else %}
             <p>Ваш кошик порожній.</p>
         {% endif %}
     </div>
-    
-    
 
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
@@ -305,6 +310,18 @@
     </div>
 
     <script>
+
+        document.getElementById("checkoutBtn").onclick = function() {
+            {% if not request.session.user_id %}
+                // Якщо користувач не авторизований, перенаправляємо на сторінку реєстрації
+                window.location.href = "{% url 'register' %}";
+            {% else %}
+                // Якщо користувач авторизований, відкриваємо модальне вікно оформлення замовлення
+                var modal = document.getElementById("checkoutModal");
+                modal.style.display = "block";
+            {% endif %}
+        };
+
         var modal = document.getElementById("checkoutModal");
         var btn = document.getElementById("checkoutBtn");
         var span = document.getElementById("closeModal");
