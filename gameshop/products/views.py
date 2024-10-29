@@ -133,10 +133,16 @@ def update_cart(request, item_id):
 
     if request.method == 'POST':
         quantity = int(request.POST.get('quantity', 1))
-        if quantity > 0:
-            cart[str(item_id)]['quantity'] = quantity
+
+        if item_id in cart:
+            if quantity > 0:
+                cart[item_id]['quantity'] = quantity
+                messages.success(request, f"Кількість товару '{cart[item_id]['name']}' оновлено.")
+            else:
+                del cart[item_id]
+                messages.success(request, "Товар видалено з кошика.")
         else:
-            del cart[str(item_id)]
+            messages.error(request, "Товар не знайдено в кошику.")
 
     request.session['cart'] = cart
     request.session.modified = True
