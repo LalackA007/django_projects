@@ -9,43 +9,48 @@
     <!-- Вбудовані стилі -->
     <style>
     
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+    body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #343a40;
             padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
         }
 
         nav ul {
-            list-style-type: none;
             display: flex;
-            gap: 20px;
+            gap: 15px;
+            list-style: none;
             margin: 0;
             padding: 0;
         }
 
         nav a {
             text-decoration: none;
-            color: #333;
-            font-weight: bold;
+            color: #adb5bd;
+            font-weight: 500;
             transition: color 0.3s;
         }
 
         nav a:hover {
-            color: #218838;
-        }
-
-        .cart a {
-            font-size: 24px;
+            color: #f8f9fa;
         }
 
         .container {
@@ -100,7 +105,7 @@
         }
 
         .cart-item-quantity input {
-            width: 50px;
+            width: 30px;
             padding: 5px;
             text-align: center;
             margin-left: 10px;
@@ -219,6 +224,79 @@
         .submit-btn:hover {
             background-color: #218838;
         }
+
+        .cart-item button {
+            padding: 5px 9px;
+            margin: 3px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .cart-item button:hover {
+            
+        }
+
+        .cart-item .remove-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .cart-item .remove-btn:hover {
+            background-color: #c82333;
+        }
+
+        .cart-item .cart-item-quantity button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .cart-item .cart-item-quantity button:hover {
+            background-color: #218838;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .clear-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .clear-cart-btn:hover {
+            background-color: #c82333;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #218838;
+        }
+
+
     </style>
 </head>
 <body>
@@ -238,16 +316,16 @@
     <div class="container">
         <h2>Ваш кошик</h2>
     
-    <div class="messages">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    </div>    
-
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    
         {% if cart %}
             {% for item_id, item in cart.items %}
                 <div class="cart-item">
@@ -259,27 +337,37 @@
                     <div class="cart-item-quantity">
                         <form action="{% url 'update_cart' item_id=item_id %}" method="POST">
                             {% csrf_token %}
+                            <input type="hidden" name="action" value="update">
                             <label>Кількість:</label>
                             <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
                             <button type="submit">Оновити</button>
-                        </form>                        
+                        </form>
                     </div>
-                    <div class="cart-item-price">
-                        <p>${{ item.price|floatformat:2 }}</p>
+                    <div class="cart-item-remove">
+                        <form action="{% url 'update_cart' item_id=item_id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="remove">
+                            <button type="submit" class="remove-btn">Видалити</button>
+                        </form>
                     </div>
                 </div>
             {% endfor %}
-        
+    
             <div class="cart-summary">
                 <h3>Загальна сума: ${{ total_price }}</h3>
             </div>
-        
+    
+            <div class="cart-actions">
                 <button class="checkout-btn" id="checkoutBtn">Оформити замовлення</button>
-            
+                <form action="{% url 'clear_cart' %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="clear-cart-btn">🗑</button>
+                </form>
+            </div>
         {% else %}
             <p>Ваш кошик порожній.</p>
         {% endif %}
-    </div>
+    </div>    
 
     <div id="checkoutModal" class="modal">
         <div class="modal-content">

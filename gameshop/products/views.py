@@ -132,18 +132,29 @@ def update_cart(request, item_id):
     cart = request.session.get('cart', {})
 
     if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 1))
-
-        if item_id in cart:
-            if quantity > 0:
-                cart[item_id]['quantity'] = quantity
-                messages.success(request, f"Кількість товару '{cart[item_id]['name']}' оновлено.")
+        action = request.POST.get('action')
+        if action == 'update':
+            quantity = int(request.POST.get('quantity', 1))
+            if item_id in cart:
+                if quantity > 0:
+                    cart[item_id]['quantity'] = quantity
+                    messages.success(request, f"Кількість товару '{cart[item_id]['name']}' оновлено.")
+                else:
+                    del cart[item_id]
+                    messages.success(request, "Товар видалено з кошика.")
             else:
+                messages.error(request, "Товар не знайдено в кошику.")
+        elif action == 'remove':
+            if item_id in cart:
                 del cart[item_id]
                 messages.success(request, "Товар видалено з кошика.")
-        else:
-            messages.error(request, "Товар не знайдено в кошику.")
 
     request.session['cart'] = cart
     request.session.modified = True
+    return redirect('cart')
+
+def clear_cart(request):
+    request.session['cart'] = {}
+    request.session.modified = True
+    messages.success(request, "Кошик очищено.")
     return redirect('cart')
