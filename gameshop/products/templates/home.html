@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #ececec;
             margin: 0;
             padding: 0;
             display: flex;
@@ -47,6 +47,14 @@
         }
 
         nav a:hover {
+            color: #f8f9fa;
+        }
+
+        .span{
+            color: #adb5bd;
+        }
+
+        .active{
             color: #f8f9fa;
         }
 
@@ -98,7 +106,7 @@
         }
 
         .alert-success {
-            background-color: #d4edda;
+            background-color: #9eebb0;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
@@ -117,17 +125,26 @@
         <h1>Home</h1>
         <nav> 
             <ul>
-                <li><a href="{% url 'home' %}">Настільні ігри</a></li>
+                <li><a href="{% url 'home' %}" class="active">Настільні ігри</a></li>
+                <span class="span">|</span>
                 <li><a href="{% url 'accessories' %}">Аксесуари</a></li>
+                <span class="span">|</span>
                 <li><a href="{% url 'register' %}">Реєстрація</a></li>
-                <li class="cart"><a href="{% url 'cart' %}">🛒</a></li>
+                <span class="span">|</span>
+                <li><a href="{% url 'login' %}">Увійти</a></li>
+                <span class="span">|</span>
+                <li class="cart">
+                    <a href="{% url 'cart' %}">
+                        {% if request.session.cart and request.session.cart|length > 0 %}
+                            🛒🟢
+                        {% else %}
+                            🛒
+                        {% endif %}
+                    </a>
+                </li>                
             </ul>
         </nav>
     </div>
-
-    <header>
-        <h1>Для вас</h1>
-    </header>
  
     <div class="messages">
         {% if messages %}
@@ -146,9 +163,15 @@
                 <h2>{{ product.name }}</h2>
                 <p>{{ product.description }}</p>
                 <p>Ціна: ${{ product.price }}</p>
-                <a href="{% url 'add_product_to_cart' product.id %}">
-                    <button type="button">В кошик</button>
-                </a>
+                {% if product.in_cart %}
+                    <a href="{% url 'cart' %}">
+                        <button type="button">Переглянути в кошику</button>
+                    </a>
+                {% else %}
+                    <a href="{% url 'add_product_to_cart' product.id %}">
+                        <button type="button">В кошик</button>
+                    </a>
+                {% endif %}
             </div>
         {% endfor %}
     </section>

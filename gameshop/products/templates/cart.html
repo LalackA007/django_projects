@@ -11,7 +11,7 @@
     
     body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #ececec;
             margin: 0;
             padding: 0;
             display: flex;
@@ -51,6 +51,10 @@
 
         nav a:hover {
             color: #f8f9fa;
+        }
+
+        .span{
+            color: #adb5bd;
         }
 
         .container {
@@ -151,8 +155,9 @@
         }
 
         .alert-success {
-            background-color: #d4edda;
+            background-color: #9eebb0;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .alert-error {
@@ -235,10 +240,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .cart-item button:hover {
-            
-        }
-
         .cart-item .remove-btn {
             background-color: #dc3545;
             color: white;
@@ -306,9 +307,22 @@
         <nav> 
             <ul>
                 <li><a href="{% url 'home' %}">Настільні ігри</a></li>
+                <span class="span">|</span>
                 <li><a href="{% url 'accessories' %}">Аксесуари</a></li>
+                <span class="span">|</span>
                 <li><a href="{% url 'register' %}">Реєстрація</a></li>
-                <li class="cart"><a href="{% url 'cart' %}">🛒</a></li>
+                <span class="span">|</span>
+                <li><a href="{% url 'login' %}">Увійти</a></li>
+                <span class="span">|</span>
+                <li class="cart">
+                    <a href="{% url 'cart' %}">
+                        {% if request.session.cart and request.session.cart|length > 0 %}
+                            🛒🟢
+                        {% else %}
+                            🛒
+                        {% endif %}
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
@@ -347,7 +361,7 @@
                         <form action="{% url 'update_cart' item_id=item_id %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="remove">
-                            <button type="submit" class="remove-btn">Видалити</button>
+                            <button type="submit" class="remove-btn">🗑</button>
                         </form>
                     </div>
                 </div>
@@ -361,7 +375,7 @@
                 <button class="checkout-btn" id="checkoutBtn">Оформити замовлення</button>
                 <form action="{% url 'clear_cart' %}" method="POST" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit" class="clear-cart-btn">🗑</button>
+                    <button type="submit" class="clear-cart-btn">Очистити</button>
                 </form>
             </div>
         {% else %}

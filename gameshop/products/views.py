@@ -44,10 +44,18 @@ def logout(request):
 
 def home(request):
     products = Product.objects.all()
+    cart = request.session.get('cart', {})
+    for product in products:
+        item_key = f'product_{product.id}'
+        product.in_cart = item_key in cart
     return render(request, 'home.html', {'products': products})
 
 def accessories(request):
     accessories = Accessories.objects.all()
+    cart = request.session.get('cart', {})
+    for accessory in accessories:
+        item_key = f'accessory_{accessory.id}'
+        accessory.in_cart = item_key in cart
     return render(request, 'accessories.html', {'accessories': accessories})
 
 def cart(request):

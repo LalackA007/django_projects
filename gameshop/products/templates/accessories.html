@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #ececec;
             margin: 0;
             padding: 0;
             display: flex;
@@ -50,6 +50,14 @@
             color: #f8f9fa;
         }
 
+        .span{
+            color: #adb5bd;
+        }
+
+        .active{
+            color: #f8f9fa;
+        }
+
         .product-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -86,18 +94,18 @@
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #1d7c32;
         }
 
         .alert {
             padding: 10px;
-            margin: 10px 10px 20px 10px;
+            margin: 10px;
             border-radius: 5px;
             font-size: 16px;
         }
 
         .alert-success {
-            background-color: #d4edda;
+            background-color: #9eebb0;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
@@ -117,17 +125,26 @@
         <nav> 
             <ul>
                 <li><a href="{% url 'home' %}">Настільні ігри</a></li>
-                <li><a href="{% url 'accessories' %}">Аксесуари</a></li>
+                <span class="span">|</span>
+                <li><a href="{% url 'accessories' %}" class="active">Аксесуари</a></li>
+                <span class="span">|</span>
                 <li><a href="{% url 'register' %}">Реєстрація</a></li>
-                <li class="cart"><a href="{% url 'cart' %}">🛒</a></li>
+                <span class="span">|</span>
+                <li><a href="{% url 'login' %}">Увійти</a></li>
+                <span class="span">|</span>
+                <li class="cart">
+                    <a href="{% url 'cart' %}">
+                        {% if request.session.cart and request.session.cart|length > 0 %}
+                            🛒🟢
+                        {% else %}
+                            🛒
+                        {% endif %}
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>
 
-    <header>
-        <h1>Аксесуари</h1>
-    </header>
-    
     <div class="messages">
         {% if messages %}
             {% for message in messages %}
@@ -145,9 +162,15 @@
                 <h2>{{ accessory.name }}</h2>
                 <p>{{ accessory.description }}</p>
                 <p>Ціна: ${{ accessory.price }}</p>
-                <a href="{% url 'add_accessory_to_cart' accessory.id %}">
-                    <button type="button">В кошик</button>
-                </a>                
+                {% if accessory.in_cart %}
+                    <a href="{% url 'cart' %}">
+                        <button type="button">Переглянути в кошику</button>
+                    </a>
+                {% else %}
+                    <a href="{% url 'add_accessory_to_cart' accessory.id %}">
+                        <button type="button">В кошик</button>
+                    </a>
+                {% endif %}
             </div>
         {% endfor %}
     </section>
