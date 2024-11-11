@@ -31,6 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+<<<<<<< HEAD:lalak_sample_project/lalak_sample_project/settings.py
+=======
+    'hello_app',
+    'home_app',
+    'blog_app',
+    'django.contrib.auth',
+>>>>>>> 6b93b3c (pagination):my_sample_project/my_sample_project/settings.py
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
