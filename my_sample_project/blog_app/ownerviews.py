@@ -1,4 +1,5 @@
 from django.views.generic import DetailView, DeleteView, UpdateView, CreateView
+from django.utils.text import slugify
 
 class OwnerDeleteView(DeleteView):
     def get_queryset(self, **kwargs):
@@ -17,6 +18,7 @@ class OwnerCreateView(CreateView):
        print('form_valid called')
        object = form.save(commit=False)
        object.owner = self.request.user
+       object.slug = slugify(object.title)
        object.save()
        return super(CreateView, self).form_valid(form)
 
