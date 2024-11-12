@@ -1,34 +1,148 @@
-<h2>All posts:</h2>
-<ul>
-   {% for blogpost in page_obj %}
-   <li>
-   <a href="{{blogpost.get_absolute_url}}">{{ blogpost.title }}</a>
-   {% if blogpost.owner == user %}
-   ( <a href="{% url 'blog_app:update_post' blogpost.id %}">
-      Edit</a> |
-   <a href="{% url 'blog_app:delete_post' blogpost.id %}">
-      Delete</a>)
-   {% endif %}
-   </li>
-   {% endfor %}  
-</ul>
+<style>
+    .post-list {
+        display: flex;
+        margin-left: 25px;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
 
-<a href="{% url 'blog_app:create_post' %}">Create post</a>
+    /* Style for each post card */
+    .post-card {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 16px;
+        width: 300px;
+        transition: transform 0.3s ease;
+    }
+
+    .post-card:hover {
+        transform: scale(1.02);
+    }
+
+    .post-card h2 {
+        font-size: 1.25em;
+        color: #333;
+        margin: 0 0 8px;
+    }
+
+    .post-card p {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .post-card .post-footer {
+        align-items: center;
+        margin-top: 16px;
+    }
+
+    .post-card .post-footer a {
+        color: #006de1;
+        text-decoration: none;
+        font-size: 0.9em;
+    }
+
+    .post-card .post-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .pagination {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .step-links a {
+        padding: 5px 10px;
+        margin: 0 2px;
+        color: #006de1;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        text-decoration: none;
+    }
+
+    .step-links a:hover {
+        background-color: #006de1;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .step-links .current {
+        padding: 5px 10px;
+        margin: 0 2px;
+        background-color: #0056b3;
+        color: #fff;
+        border-radius: 3px;
+        font-weight: bold;
+    }
+    
+    .button-link {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px 0;
+        color: #fff;
+        background-color: #0056b3;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: bold;
+        text-align: center;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .button-link:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+
+    .button-link:active {
+        transform: scale(1.03);
+    }
+
+    /* Container styling for alignment */
+    .button-container {
+        margin: 20px 0;
+        text-align: center;
+    }
+
+</style>
+
+<h2>All posts:</h2>
+<div class="post-list">
+    {% for blogpost in page_obj %}
+    <div class="post-card">
+        <h2><a href="{{ blogpost.get_absolute_url }}">{{ blogpost.title }}</a></h2>
+        <p>{{ blogpost.text|truncatewords:12 }}</p>
+        <p><i>Owner - {{ blogpost.owner }}</i></p>
+
+        <div class="post-footer">
+            {% if blogpost.owner == user %}
+                <a href="{% url 'blog_app:update_post' blogpost.id %}">Edit</a> |
+                <a href="{% url 'blog_app:delete_post' blogpost.id %}">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<a href="{% url 'blog_app:create_post' %}" class="button-link">Create post</a>
+
 
 <div class="pagination">
-   <span class="step-links">
-       {% if page_obj.has_previous %}
-           <a href="?page=1">&laquo; first</a>
-           <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-       {% endif %}
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
 
-       <span class="current">
-           Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-       </span>
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
 
-       {% if page_obj.has_next %}
-           <a href="?page={{ page_obj.next_page_number }}">next</a>
-           <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-       {% endif %}
-   </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
 </div>

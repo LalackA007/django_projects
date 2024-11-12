@@ -1,6 +1,58 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Update">
- </form>
- 
+<style>
+    .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Form field styling */
+    .form-container form p {
+        margin-bottom: 15px;
+    }
+
+    .form-container input[type="text"],
+    .form-container textarea,
+    .form-container select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+        box-sizing: border-box;
+    }
+
+    /* Update button styling */
+    .update-button {
+        width: 100%;
+        padding: 12px;
+        font-size: 1em;
+        font-weight: bold;
+        color: #fff;
+        background-color: #006de1;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .update-button:hover {
+        background-color: #006de1;
+        transform: scale(1.05);
+    }
+
+    .update-button:active {
+        transform: scale(1.03);
+    }
+</style>
+
+<div class="form-container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Update" class="update-button">
+    </form>
+</div>

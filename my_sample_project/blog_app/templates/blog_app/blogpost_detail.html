@@ -1,6 +1,51 @@
-<h1>{{blogpost.title}}</h1>
 
-<p>{{blogpost.text}}</p>
+<style>
+        /* Blog post container */
+    .blogpost-container {
+        max-width: 700px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-<p><i>Posted on {{blogpost.created_at}}</i></p>
-<p><i>Owner - {{blogpost.owner}}</i></p>
+    /* Blog post title styling */
+    .blogpost-container h1 {
+        font-size: 2em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    /* Blog post content styling */
+    .blogpost-container p {
+        font-size: 1.1em;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    /* Metadata styling */
+    .blogpost-container p i {
+        display: block;
+        font-size: 0.9em;
+        color: #888;
+        margin-top: 10px;
+    }
+
+    /* Owner info styling */
+    .blogpost-container .owner-info {
+        font-size: 1em;
+        color: #666;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="blogpost-container">
+    <h1>{{ blogpost.title }}</h1>
+    
+    <p>{{ blogpost.text }}</p>
+    
+    <p><i>Posted on {{ blogpost.created_at }}</i></p>
+    <p class="owner-info"><i>Owner - {{ blogpost.owner }}</i></p>
+</div>

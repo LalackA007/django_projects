@@ -8,7 +8,7 @@ from django.http import Http404
 
 class BlogListView(ListView):
     model = BlogPost
-    paginate_by = 2
+    paginate_by = 6
 
 class BlogDetailView(DetailView):
     model = BlogPost
