@@ -9,4 +9,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('open_page', views.open_page, name="open_page"),    
     path('closed_page', views.closed_page, name="closed_page"),
+    path('blog', include('blog_app.urls')),
 ]
