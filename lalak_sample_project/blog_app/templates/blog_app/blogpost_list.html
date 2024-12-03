@@ -1,4 +1,9 @@
 <style>
+
+    h2{
+        margin-top: 15px;
+    }
+
     .post-list {
         display: flex;
         margin-left: 25px;
@@ -47,120 +52,77 @@
     }
 
     .pagination {
-        text-align: center;
-        margin-top: 20px;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
 
-    .step-links a {
-        padding: 5px 10px;
-        margin: 0 2px;
-        color: #006de1;
-        border: 1px solid #ddd;
-        border-radius: 3px;
-        text-decoration: none;
-    }
+.step-links a {
+    padding: 5px 10px;
+    margin: 0 2px;
+    color: #006de1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    text-decoration: none;
+}
 
-    .step-links a:hover {
-        background-color: #006de1;
-        color: #fff;
-        text-decoration: none;
-    }
+.step-links a:hover {
+    background-color: #006de1;
+    color: #fff;
+    text-decoration: none;
+}
 
-    .step-links .current {
-        padding: 5px 10px;
-        margin: 0 2px;
-        background-color: #0056b3;
-        color: #fff;
-        border-radius: 3px;
-        font-weight: bold;
-    }
-    
-    .button-link {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 10px 0;
-        color: #fff;
-        background-color: #0056b3;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        font-weight: bold;
-        text-align: center;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .button-link:hover {
-        background-color: #0056b3;
-        transform: scale(1.05);
-    }
-
-    .button-link:active {
-        transform: scale(1.03);
-    }
-
-    .button-container {
-        margin: 20px 0;
-        text-align: center;
-    }
+.step-links .current {
+    padding: 5px 10px;
+    margin: 0 2px;
+    background-color: #0056b3;
+    color: #fff;
+    border-radius: 3px;
+    font-weight: bold;
+}
 
 </style>
 
-{%extends 'blog_app/base.html' %}
+{% extends 'blog_app/base.html' %}
 
-{%block content%}
-<h2>All posts:</h2>
-<ul>
-   {% for blogpost in page_obj %}
-   <li>
-   <a href="{{ blogpost.get_absolute_url }}">{{ blogpost.title }}</a>
+{% block content %}
 
-   {% if blogpost.owner == user %}
-   ( <a href="{% url 'blog_app:update_post' blogpost.id %}">
-      Edit</a> |
-   <a href="{% url 'blog_app:delete_post' blogpost.id %}">
-      Delete</a>)
-   {% endif %}
-   </li>
-   {% endfor %}
-</ul>
+{% if request.path == '/my_posts/' %}
+    <h2>My Posts</h2>
+{% else %}
+    <h2>All Posts</h2>
+{% endif %}
 
-<div class="pagination">
-   <span class="step-links">
-       {% if page_obj.has_previous %}
-           <a href="?page=1">&laquo; first</a>
-           <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-       {% endif %}
-
-       <span class="current">
-           Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-       </span>
-
-       {% if page_obj.has_next %}
-           <a href="?page={{ page_obj.next_page_number }}">next</a>
-           <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-       {% endif %}
-   </span>
+<div class="post-list">
+    {% for blogpost in page_obj %}
+    <div class="post-card">
+        <h2><a href="{{ blogpost.get_absolute_url }}">{{ blogpost.title }}</a></h2>
+        <p>{{ blogpost.description|truncatewords:20 }}</p>
+        <div class="post-footer">
+            {% if blogpost.owner == user %}
+            <a href="{% url 'blog_app:update_post' blogpost.id %}">Edit</a> |
+            <a href="{% url 'blog_app:delete_post' blogpost.id %}">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
 </div>
-{%endblock%}
-
-
-<a href="{% url 'blog_app:create_post' %}" class="button-link">Create post</a>
-
 
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
-
         <span class="current">
             Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </span>
-
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
+
+{% endblock %}
