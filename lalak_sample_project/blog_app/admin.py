@@ -1,7 +1,12 @@
 from django.contrib import admin
-from .models import BlogPost
+from .models import BlogPost, Comment
 
+@admin.register(BlogPost)
 class BlogPostAdmin(admin.ModelAdmin):
-    prepopulated_fields = {"slug": ("title",)}
-
-admin.site.register(BlogPost, BlogPostAdmin)
+    list_display = ["title", "owner", "status", "published_at"]
+    list_filter = ["owner", "status"]
+    
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["user", "blogpost", "active"]
+    list_filter = ["user", "active"]
