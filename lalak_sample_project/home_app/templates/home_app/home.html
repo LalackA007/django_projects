@@ -11,6 +11,9 @@
     Id: {{ user.id }}
     Is admin: {{user.is_superuser}}
     </pre>
+    {% if user.profile.photo%}
+    <img style="width:50px; height:50px" src={{ user.profile.photo.url }}/>
+    {% endif%}
 </p>
 
 <form action="{% url "logout" %}" method="post">
