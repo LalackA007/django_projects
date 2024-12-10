@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'crispy_forms',  
     'crispy_bootstrap5',  
     'django_extensions',
-    'social_django', 
+    'social_django',
+    'bookmarks_app',
 ]
 
 MIDDLEWARE = [
@@ -159,7 +160,7 @@ AUTHENTICATION_BACKENDS = [
     'home_app.authentication.EmailAuthBackend',
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.github.GithubOAuth2',
-    'account.authentication.EmailAuthBackend',
+    'home_app.authentication.EmailAuthBackend',
 ]
 
 SOCIAL_AUTH_PIPELINE = [
@@ -169,7 +170,7 @@ SOCIAL_AUTH_PIPELINE = [
  'social_core.pipeline.social_auth.social_user',
  'social_core.pipeline.user.get_username',
  'social_core.pipeline.user.create_user',
- 'account.authentication.create_profile',
+#  'home_app.authentication.create_profile',
  'social_core.pipeline.social_auth.associate_user',
  'social_core.pipeline.social_auth.load_extra_data',
  'social_core.pipeline.user.user_details',
