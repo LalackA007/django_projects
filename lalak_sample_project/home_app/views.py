@@ -4,8 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
+<<<<<<< HEAD
 from .forms import *
 from .models import Profile
+=======
+>>>>>>> 00c691414f1328b5762828267d913cdb8ad70007
 
 def home(request):
     return render(request, "home_app/home.html")
@@ -27,6 +30,7 @@ def open_page(request):
 @login_required
 def closed_page(request):
     return HttpResponse("<h1>Closed page</h1><p>This page is available only to authorized users. <br> You are definitely authorized if you see this page.</p>")
+<<<<<<< HEAD
 
 @login_required
 def edit(request):
@@ -47,3 +51,5 @@ def edit(request):
                   {"user_form" : user_form, 
                    "profile_form": profile_form 
     })
+=======
+>>>>>>> 00c691414f1328b5762828267d913cdb8ad70007

@@ -1,4 +1,5 @@
 from django.db import models
+<<<<<<< HEAD
 from django.conf import settings
 
 class Profile(models.Model):
@@ -8,3 +9,7 @@ class Profile(models.Model):
     
     def __str__(self):
         return f'Profile of {self.user.username}'
+=======
+
+# Create your models here.
+>>>>>>> 00c691414f1328b5762828267d913cdb8ad70007

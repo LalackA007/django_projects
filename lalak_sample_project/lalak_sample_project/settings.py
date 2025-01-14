@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-42kb)k9x$s0j0d!i%a-izs8fhczcf()nj)bbv+d&tds$e(kf$p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+<<<<<<< HEAD
 ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1']
+=======
+ALLOWED_HOSTS = []
+>>>>>>> 00c691414f1328b5762828267d913cdb8ad70007
 
 
 # Application definition
@@ -41,11 +45,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'crispy_forms',  
     'crispy_bootstrap5',  
     'django_extensions',
     'social_django',
     'bookmarks_app',
+=======
+    'django_extensions', 
+    'crispy_forms',  
+    'crispy_bootstrap5',  
+>>>>>>> 00c691414f1328b5762828267d913cdb8ad70007
 ]
 
 MIDDLEWARE = [
@@ -147,6 +157,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 MEDIA_URL = 'media/'
+<<<<<<< HEAD
 MEDIA_ROOT =  BASE_DIR / 'media'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_OAUTH2_KEY')
@@ -175,3 +186,6 @@ SOCIAL_AUTH_PIPELINE = [
  'social_core.pipeline.social_auth.load_extra_data',
  'social_core.pipeline.user.user_details',
 ]
+=======
+MEDIA_ROOT =  BASE_DIR / 'media'
+>>>>>>> 00c691414f1328b5762828267d913cdb8ad70007
